@@ -1,19 +1,28 @@
 const WS = require("ws")
+const FS = require("fs")
 
 class WebSocket {
     constructor() {
-        this.OnMessage = []
+        this.MessageListeners = []
+        this.Connect()
     }
 
     OnMessage(Fn) {
-        this.OnMessage.push(Fn)
+        this.MessageListeners.push(Fn)
     }
 
     Send(Text) {
         this.WebSocket.send(Text)
     }
 
+    Heartbeat() {
+        
+    }
+
+    StopHeartbeat() {
+
     Connect() {
+        console.log("Trying to connect to WebSocket")
         this.WebSocket = new WS.WebSocket(
             `ws://${FS.readFileSync("./SERVER", "utf8")}/ws`,
             {
@@ -24,10 +33,22 @@ class WebSocket {
         )
 
         this.WebSocket.on(
+            "error",
+            function (Error) { }.bind(this)
+        )
+
+        this.WebSocket.on(
             "open",
             function () {
-                console.log("Connected")
-                this.WebSocket.send("Hello")
+                console.log("WebSocket Opened")
+            }.bind(this)
+        )
+
+        this.WebSocket.on(
+            "close",
+            function (Code, Reason) {
+                console.log("WebSocket Closed", Code, Reason.toString())
+                this.Disconnect(true)
             }.bind(this)
         )
 
@@ -35,11 +56,20 @@ class WebSocket {
             "message",
             function (Message) {
                 const MessageData = Message.toString()
-                console.log(MessageData)
-                for (const Fn of this.OnMessage) {
+                for (const Fn of this.MessageListeners) {
                     Fn(MessageData)
                 }
             }.bind(this)
         )
     }
+
+    async Disconnect(Reconnect) {
+        this.WebSocket.close()
+        if (Reconnect) {
+            await new Promise( resolve => setTimeout(resolve, 1000) )
+            this.Connect()
+        }
+    }
 }
+
+module.exports = WebSocket
