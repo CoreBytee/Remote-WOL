@@ -40,11 +40,11 @@ class WebServer {
         this.App.get(
             "/boot",
             function (Request, Response) {
-                console.log("boot")
+                this.Main.StartBooting()
                 Response.redirect(
                     "/"
                 )
-            }
+            }.bind(this)
         )
     }
 

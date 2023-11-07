@@ -7,7 +7,7 @@ class WebSocket {
         this.Server = Server
         this.Secret = FS.readFileSync("./CLIENTPASSWORD", "utf8")
         this.Connections = []
-        this.OnMessage = []
+        this.MessageListeners = []
         this.RunServer()
         this.ListenConnections()
     }
@@ -67,8 +67,7 @@ class WebSocket {
                     "message",
                     function (Message) {
                         const MessageData = Message.toString()
-                        console.log(MessageData)
-                        for (const Fn of this.OnMessage) {
+                        for (const Fn of this.MessageListeners) {
                             Fn(MessageData)
                         }
                     }.bind(this)
@@ -85,7 +84,7 @@ class WebSocket {
     }
 
     OnMessage(Fn) {
-        this.OnMessage.push(Fn)
+        this.MessageListeners.push(Fn)
     }
 }
 
