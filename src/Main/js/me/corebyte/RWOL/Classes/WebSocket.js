@@ -50,7 +50,7 @@ class WebSocket {
                 WebSocket.on(
                     "close",
                     function () {
-                        this.Connections.splice(ConnectionId, 1)
+                        delete this.Connections[ConnectionId]
                         clearInterval(HeartbeatInterval)
                         TypeWriter.Logger.Information("Connection Closed: " + ConnectionId)
                     }.bind(this)

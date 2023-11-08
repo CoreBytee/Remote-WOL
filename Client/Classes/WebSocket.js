@@ -16,15 +16,24 @@ class WebSocket {
     }
 
     Heartbeat() {
-        
+        this.StopHeartbeat()
+        this.HeartbeatTimeout = setTimeout(
+            function () {
+                this.Disconnect(true)
+            }.bind(this),
+            15000
+        )
     }
 
     StopHeartbeat() {
+        if (!this.HeartbeatTimeout) { return }
+        clearTimeout(this.HeartbeatTimeout)
+    }
 
     Connect() {
         console.log("Trying to connect to WebSocket")
         this.WebSocket = new WS.WebSocket(
-            `ws://${FS.readFileSync("./SERVER", "utf8")}/ws`,
+            `wss://${FS.readFileSync("./SERVER", "utf8")}/ws`,
             {
                 headers: {
                     "Authentication": FS.readFileSync("./SERVERPASSWORD", "utf8")
@@ -34,8 +43,10 @@ class WebSocket {
 
         this.WebSocket.on(
             "error",
-            function (Error) { }.bind(this)
+            console.log
         )
+
+        this.WebSocket.on("ping", this.Heartbeat.bind(this))
 
         this.WebSocket.on(
             "open",
@@ -63,10 +74,15 @@ class WebSocket {
         )
     }
 
-    async Disconnect(Reconnect) {
-        this.WebSocket.close()
+    async Disconnect(Reconnect, Force=false) {
+        this.StopHeartbeat()
+        if (Force) {
+            this.WebSocket.terminate()
+        } else {
+            this.WebSocket.close()
+        }
         if (Reconnect) {
-            await new Promise( resolve => setTimeout(resolve, 1000) )
+            await new Promise(resolve => setTimeout(resolve, 1000))
             this.Connect()
         }
     }
