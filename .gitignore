@@ -1,10 +1,2 @@
+.env
 node_modules
-package-lock.json
-MAC
-SERVER
-SERVERPASSWORD
-CLIENTPASSWORD
-PASSWORD
-PORT
-WakeyWakey/WakeyWakey.zip
-RWOL.twr
