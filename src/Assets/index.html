@@ -6,10 +6,79 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         <title>RemoteWOL</title>
+
+        <style>
+            html, body {
+                height: 100vh;
+                margin: 0;
+                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                color: white;
+            }
+
+            body {
+                background-color: #272727;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            p, h1, h2, h3, h4, h5, h6 {
+                margin: 0;
+            }
+
+            .container {
+                background-color: #424242;
+                padding: 20px;
+                border-radius: 20px;
+
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                gap: 20px;
+
+                .statecontainer {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 5px;
+
+                    &.online .statusicon {
+                        background-color: #00ff00;
+                    }
+
+                    .statusicon {
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        background-color: #ff0000;
+                        display: inline-block;
+                        margin-right: 5px;
+                    }
+                }
+            }
+
+            button {
+                appearance: none;
+                border: none;
+                padding: 10px;
+                border-radius: 10px;
+                color: white;
+                background-color: #353535;
+                cursor: pointer;
+            }
+        </style>
     </head>
 
     <body>
-
+        <div class="container">
+            <h1>RemoteWOL</h1>
+            <button>Send boot packet</button>
+            <div class="statecontainer online">
+                <div class="statusicon"></div>
+                <a>Target is </a>
+                <a class="state">offline</a>
+            </div>
+        </div>
     </body>
 
 </html>
