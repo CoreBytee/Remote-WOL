@@ -3,6 +3,7 @@
   "type": "module",
   "main": "./src/index.js",
   "dependencies": {
+    "@network-utils/arp-lookup": "^2.1.0",
     "elysia": "^1.0.13"
   },
   "scripts": {
