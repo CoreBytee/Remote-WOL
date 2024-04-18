@@ -1,4 +1,6 @@
-import Server from "./Server";
+import Server from "./Server"
+import ping from 'ping'
+
 
 export default class RemoteWol {
     constructor(TargetMac, TargetIP) {
@@ -8,5 +10,16 @@ export default class RemoteWol {
 
         // Objects
         this.Server = new Server(this)
+    }
+
+    async PingTarget() {
+        const PingResult = await ping.promise.probe(
+            this.TargetIP,
+            {
+                min_reply: 1
+            }
+        )
+
+        return PingResult.alive
     }
 }

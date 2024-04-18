@@ -1,7 +1,6 @@
 import { Elysia } from 'elysia'
 import Index from "../Assets/index.html"
 import BasicAuthentication from '../Helpers/BasicAuthentication'
-import ping from 'ping'
 
 export default class Server {
     constructor(RemoteWol) {
@@ -25,11 +24,7 @@ export default class Server {
         this.App.get(
             "/ping",
             async (Context) => {
-                const PingResult = await ping.promise.probe(
-                    this.RemoteWol.TargetIP,
-                    {}
-                )
-                return JSON.stringify(PingResult.alive)
+                return await this.RemoteWol.PingTarget()
             }
         )
 
