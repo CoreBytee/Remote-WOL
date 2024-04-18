@@ -8,6 +8,9 @@ export default class RemoteWol {
         this.TargetMac = TargetMac
         this.TargetIP = process.env.TARGET_IP_OVERRIDE || TargetIP
 
+        console.log(`Target MAC: ${this.TargetMac}`)
+        console.log(`Target IP: ${this.TargetIP}`)
+
         // Objects
         this.Server = new Server(this)
     }
