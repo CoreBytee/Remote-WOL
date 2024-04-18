@@ -1,10 +1,6 @@
 import Elysia from "elysia"
 
-
-
-export default function BasicAuthentication(Users, Realm = "Protected", ErrorFunction) {
-    if (ErrorFunction === undefined) { ErrorFunction = (Context) => { return Context } }
-
+export default function BasicAuthentication(Users, Realm = "Protected") {
     function Unauthorized() {
         return new Response(
             "Unauthorized",

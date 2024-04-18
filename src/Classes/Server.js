@@ -11,11 +11,7 @@ export default class Server {
                 [
                     { Username: process.env.LOGIN_NAME, Password: process.env.LOGIN_PASSWORD }
                 ],
-                "Protected",
-                (Context) => {
-                    Context.set.status = 401
-                    return "Unauthorized"
-                }
+                "Protected"
             )
         )
 
