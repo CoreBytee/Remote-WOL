@@ -67,6 +67,30 @@
                 cursor: pointer;
             }
         </style>
+
+        <script type="module">
+            async function IsOnline() {
+                const Response = await fetch("/ping")
+                const Data = await Response.json()
+                return Data
+            }
+
+            function UpdateIndicator(State) {
+                const StateContainer = document.querySelector(".statecontainer")
+                const StateText = StateContainer.querySelector(".state")
+
+                if (State) {
+                    StateContainer.classList.add("online")
+                    StateText.innerText = "online"
+                } else {
+                    StateContainer.classList.remove("online")
+                    StateText.innerText = "offline"
+                }
+            }
+            
+            console.log(await IsOnline())
+            
+        </script>
     </head>
 
     <body>
