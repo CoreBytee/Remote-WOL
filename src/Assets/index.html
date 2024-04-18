@@ -87,9 +87,14 @@
                     StateText.innerText = "offline"
                 }
             }
-            
-            console.log(await IsOnline())
-            
+
+            async function CheckStatus() {
+                const State = await IsOnline()
+                UpdateIndicator(State)
+            }
+
+            CheckStatus()
+            setInterval(CheckStatus, 1000)
         </script>
     </head>
 
