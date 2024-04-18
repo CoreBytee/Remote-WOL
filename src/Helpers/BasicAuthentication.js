@@ -37,8 +37,7 @@ export default function BasicAuthentication(Users, Realm = "Protected") {
             name: "BasicAuthentication",
             seed: {
                 Users: Users,
-                Realm: Realm,
-                ErrorFunction: ErrorFunction
+                Realm: Realm
             }
         }
     ).onRequest(
