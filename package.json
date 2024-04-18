@@ -3,7 +3,6 @@
   "type": "module",
   "main": "./src/index.js",
   "dependencies": {
-    "@eelkevdbos/elysia-basic-auth": "^1.4.1",
     "elysia": "^1.0.13"
   },
   "scripts": {

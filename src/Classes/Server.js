@@ -1,21 +1,20 @@
 import { Elysia } from 'elysia'
 import Index from "../Assets/index.html"
-import { basicAuth } from '@eelkevdbos/elysia-basic-auth'
+import BasicAuthentication from '../Helpers/BasicAuthentication'
 
 export default class Server {
     constructor() {
         this.App = new Elysia()
+       
         this.App.use(
-            basicAuth(
-                {
-                    credentials: [
-                        {
-                            username: process.env.LOGIN_NAME,
-                            password: process.env.LOGIN_PASSWORD
-                        }
-                    ],
-                    scope: "/",
-                    realm: "Login"
+            BasicAuthentication(
+                [
+                    { Username: process.env.LOGIN_NAME, Password: process.env.LOGIN_PASSWORD }
+                ],
+                "Protected",
+                (Context) => {
+                    Context.set.status = 401
+                    return "Unauthorized"
                 }
             )
         )
