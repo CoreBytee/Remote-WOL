@@ -89,6 +89,7 @@
             }
 
             async function CheckStatus() {
+                if (!document.hasFocus()) { return }
                 const State = await IsOnline()
                 UpdateIndicator(State)
             }
