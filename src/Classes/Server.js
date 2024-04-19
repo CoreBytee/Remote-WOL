@@ -1,30 +1,32 @@
-import { Elysia } from 'elysia'
-import Index from "../Assets/index.html"
-import BasicAuthentication from '../Helpers/BasicAuthentication'
+import express from 'express'
+import expressBasicAuth from 'express-basic-auth'
+import FS from 'fs'
 
 export default class Server {
     constructor(RemoteWol) {
         this.RemoteWol = RemoteWol
-        this.App = new Elysia()
+        this.App = express()
        
         this.App.use(
-            BasicAuthentication(
-                [
-                    { Username: process.env.LOGIN_NAME, Password: process.env.LOGIN_PASSWORD }
-                ],
-                "Protected"
+            expressBasicAuth(
+                {
+                    users: { [process.env.LOGIN_NAME]: process.env.LOGIN_PASSWORD }
+                }
             )
         )
 
         this.App.get(
             "/",
-            (Context) => { return new Response(Bun.file(Index)) }
+            (Request, Response) => {
+                Response.header("Content-Type", "text/html")
+                Response.send(FS.readFileSync("./src/Assets/index.html"))
+            }
         )
 
         this.App.get(
             "/ping",
-            async (Context) => {
-                return await this.RemoteWol.PingTarget()
+            async (Request, Response) => {
+                Response.json(await this.RemoteWol.PingTarget())
             }
         )
 
