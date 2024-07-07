@@ -1,7 +1,6 @@
 import Server from "./Server.js"
 import ping from 'ping'
 
-
 export default class RemoteWol {
     constructor(TargetMac, TargetIP) {
         // State
