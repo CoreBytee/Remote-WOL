@@ -1,3 +1,4 @@
+import { wake } from "wol"
 import Server from "./Server.js"
 import ping from 'ping'
 
@@ -24,5 +25,10 @@ export default class RemoteWol {
 
         return pingResult.alive
     }
+
+    async wakeTarget() {
+        console.log("Sending magic packet...")
+        wake(this.targetMac)
+        console.log("Sent magic packet!")
     }
 }
