@@ -1,6 +1,6 @@
 import { toIP } from "@network-utils/arp-lookup"
 import { config } from "dotenv"
-import RemoteWol from "./Classes/RemoteWol.js"
+import RemoteWol from "./classes/RemoteWol.js"
 
 config()
 

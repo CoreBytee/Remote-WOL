@@ -20,7 +20,7 @@ export default class Server {
             "/",
             (request, response) => {
                 response.header("Content-Type", "text/html")
-                response.send(FS.readFileSync("./src/Assets/index.html"))
+                response.send(FS.readFileSync("./src/assets/index.html"))
             }
         )
 
