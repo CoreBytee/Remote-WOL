@@ -98,6 +98,18 @@
             checkStatus()
             setInterval(checkStatus, 1000)
         </script>
+
+        <!-- Button functionality -->
+         <script type="module">
+            async function sendBootPacket() {
+                const response = await fetch("/wake", { method: "POST" })
+                const data = await response.json()
+                console.log(data)
+            }
+
+            const button = document.querySelector("button")
+            button.addEventListener("click", sendBootPacket)
+         </script>
     </head>
 
     <body>

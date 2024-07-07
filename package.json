@@ -8,7 +8,8 @@
     "express": "^4.19.2",
     "express-basic-auth": "^1.2.1",
     "fs-extra": "^11.2.0",
-    "ping": "^0.4.4"
+    "ping": "^0.4.4",
+    "wol": "^1.0.7"
   },
   "scripts": {
     "dev": "node .",

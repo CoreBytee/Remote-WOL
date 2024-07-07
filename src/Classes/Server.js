@@ -31,6 +31,14 @@ export default class Server {
             }
         )
 
+        this.app.post(
+            "/wake",
+            async (request, response) => {
+                await this.remoteWol.wakeTarget()
+                response.json(true)
+            }
+        )
+
         this.app.listen(process.env.SERVER_PORT)
     }
 }
