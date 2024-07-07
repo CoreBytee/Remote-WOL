@@ -1,6 +1,6 @@
 import express from 'express'
 import expressBasicAuth from 'express-basic-auth'
-import FS from 'fs'
+import FS from 'fs-extra'
 
 export default class Server {
     constructor(RemoteWol) {
