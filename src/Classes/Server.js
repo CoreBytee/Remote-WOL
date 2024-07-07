@@ -3,33 +3,34 @@ import expressBasicAuth from 'express-basic-auth'
 import FS from 'fs-extra'
 
 export default class Server {
-    constructor(RemoteWol) {
-        this.RemoteWol = RemoteWol
-        this.App = express()
+    constructor(remoteWol) {
+        this.remoteWol = remoteWol
+        this.app = express()
        
-        this.App.use(
+        this.app.use(
             expressBasicAuth(
                 {
+                    challenge: true,
                     users: { [process.env.LOGIN_NAME]: process.env.LOGIN_PASSWORD }
                 }
             )
         )
 
-        this.App.get(
+        this.app.get(
             "/",
-            (Request, Response) => {
-                Response.header("Content-Type", "text/html")
-                Response.send(FS.readFileSync("./src/Assets/index.html"))
+            (request, response) => {
+                response.header("Content-Type", "text/html")
+                response.send(FS.readFileSync("./src/Assets/index.html"))
             }
         )
 
-        this.App.get(
+        this.app.get(
             "/ping",
-            async (Request, Response) => {
-                Response.json(await this.RemoteWol.PingTarget())
+            async (request, response) => {
+                response.json(await this.remoteWol.pingTarget())
             }
         )
 
-        this.App.listen(process.env.SERVER_PORT)
+        this.app.listen(process.env.SERVER_PORT)
     }
 }

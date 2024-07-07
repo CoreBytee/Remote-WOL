@@ -68,34 +68,35 @@
             }
         </style>
 
+        <!-- Indicator -->
         <script type="module">
-            async function IsOnline() {
-                const Response = await fetch("/ping")
-                const Data = await Response.json()
-                return Data
+            async function isOnline() {
+                const response = await fetch("/ping")
+                const data = await response.json()
+                return data
             }
 
-            function UpdateIndicator(State) {
-                const StateContainer = document.querySelector(".statecontainer")
-                const StateText = StateContainer.querySelector(".state")
+            function updateIndicator(state) {
+                const stateContainer = document.querySelector(".statecontainer")
+                const stateText = stateContainer.querySelector(".state")
 
-                if (State) {
-                    StateContainer.classList.add("online")
-                    StateText.innerText = "online"
+                if (state) {
+                    stateContainer.classList.add("online")
+                    stateText.innerText = "online"
                 } else {
-                    StateContainer.classList.remove("online")
-                    StateText.innerText = "offline"
+                    stateContainer.classList.remove("online")
+                    stateText.innerText = "offline"
                 }
             }
 
-            async function CheckStatus() {
+            async function checkStatus() {
                 if (!document.hasFocus()) { return }
-                const State = await IsOnline()
-                UpdateIndicator(State)
+                const state = await isOnline()
+                updateIndicator(state)
             }
 
-            CheckStatus()
-            setInterval(CheckStatus, 1000)
+            checkStatus()
+            setInterval(checkStatus, 1000)
         </script>
     </head>
 
