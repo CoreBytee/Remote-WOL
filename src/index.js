@@ -4,7 +4,11 @@ import RemoteWol from "./Classes/RemoteWol.js"
 
 config()
 
-const RemoteWolInstance = new RemoteWol(
-    process.env.TARGET_MAC,
-    await toIP(process.env.TARGET_MAC)
-)
+async function main() {
+    new RemoteWol(
+        process.env.TARGET_MAC,
+        await toIP(process.env.TARGET_MAC)
+    )
+}
+
+main()
