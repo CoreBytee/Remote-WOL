@@ -1,6 +1,10 @@
 import express from 'express'
 import expressBasicAuth from 'express-basic-auth'
-import FS from 'fs-extra'
+import path from "path"
+import fs from 'fs-extra'
+import indexFile from '../assets/index.html'
+
+const indexFilePath = fs.existsSync(indexFile) ? indexFile : path.join(process.argv[1], "..", indexFile)
 
 export default class Server {
     constructor(remoteWol) {
@@ -20,7 +24,7 @@ export default class Server {
             "/",
             (request, response) => {
                 response.header("Content-Type", "text/html")
-                response.send(FS.readFileSync("./src/assets/index.html"))
+                response.send(fs.readFileSync(indexFilePath))
             }
         )
 
