@@ -14,5 +14,8 @@
   "scripts": {
     "dev": "node .",
     "build": "bun build ./src/index.js --target=node --outdir=./build"
+  },
+  "patchedDependencies": {
+    "@network-utils/arp-lookup@2.1.0": "patches/@network-utils%2Farp-lookup@2.1.0.patch"
   }
 }
