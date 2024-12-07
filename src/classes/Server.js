@@ -3,14 +3,17 @@ import expressBasicAuth from 'express-basic-auth'
 import path from "path"
 import fs from 'fs-extra'
 import indexFile from '../assets/index.html'
+import burtleFile from '../assets/burtle.gif'
+import chance from '../util/chance'
 
 const indexFilePath = fs.existsSync(indexFile) ? indexFile : path.join(process.argv[1], "..", indexFile)
+const burtleFilePath = fs.existsSync(burtleFile) ? burtleFile : path.join(process.argv[1], "..", burtleFile)
 
 export default class Server {
     constructor(remoteWol) {
         this.remoteWol = remoteWol
         this.app = express()
-       
+
         this.app.use(
             expressBasicAuth(
                 {
@@ -29,6 +32,18 @@ export default class Server {
         )
 
         this.app.get(
+            "/burtle.gif",
+            (request, response) => {
+                response.header("Content-Type", "image/gif")
+                response.header("Cache-Control", "no-store")
+                response.header("Pragma", "no-cache")
+                response.header("Expires", "0")
+                if (!chance(100)) { return response.send("") }
+                response.send(fs.readFileSync(burtleFilePath))
+            }
+        )
+
+        this.app.get(
             "/ping",
             async (request, response) => {
                 response.json(await this.remoteWol.pingTarget())
@@ -43,6 +58,11 @@ export default class Server {
             }
         )
 
-        this.app.listen(process.env.SERVER_PORT)
+        this.app.listen(
+            process.env.SERVER_PORT,
+            () => {
+                console.log(`Server running on port ${process.env.SERVER_PORT}`)
+            }
+        )
     }
 }
