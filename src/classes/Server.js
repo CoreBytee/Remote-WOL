@@ -6,8 +6,8 @@ import indexFile from '../assets/index.html'
 import burtleFile from '../assets/burtle.gif'
 import chance from '../util/chance'
 
-const indexFilePath = fs.existsSync(indexFile) ? indexFile : path.join(process.argv[1], "..", indexFile)
-const burtleFilePath = fs.existsSync(burtleFile) ? burtleFile : path.join(process.argv[1], "..", burtleFile)
+const indexFilePath = path.join(import.meta.dirname, indexFile)
+const burtleFilePath = path.join(import.meta.dirname, burtleFile)
 
 export default class Server {
     constructor(remoteWol) {

@@ -1,6 +1,6 @@
 {
     "name": "@corebyte/remote-wol",
-    "version": "1.0.3",
+    "version": "1.0.6",
     "type": "module",
     "main": "./dist/index.js",
     "bin": {
