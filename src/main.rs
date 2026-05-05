@@ -19,6 +19,7 @@ fn get_mac_address() -> MacAddress {
 
 #[tokio::main]
 async fn main() {
+    println!("Starting wol-relay");
     dotenv().ok();
 
     // ENV Checks
@@ -28,14 +29,14 @@ async fn main() {
     let port = std::env::var("WEBSERVER_PORT").expect("WEBSERVER_PORT env var is not set!");
     let host = format!("0.0.0.0:{}", port);
 
-    println!("Starting webserver on {host}");
-
     let router = Router::new()
         .route("/", get(index_route))
         .route("/api/check_password", get(password_check_route))
         .route("/api/send_packet", get(send_packet_route));
 
     let listener = tokio::net::TcpListener::bind(host).await.unwrap();
+
+    println!("Webserver listening on {host}");
 
     axum::serve(listener, router)
         .await
