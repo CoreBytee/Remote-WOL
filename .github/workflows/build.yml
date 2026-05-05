@@ -17,3 +17,4 @@ jobs:
               with:
                   name: wol-relay-${{ matrix.os == 'ubuntu-24.04' && 'amd64' || 'arm64' }}
                   path: ./target/release/wol-relay
+                  archive: false
