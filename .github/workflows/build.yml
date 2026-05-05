@@ -31,4 +31,5 @@ jobs:
               with:
                   push: true
                   context: .
+                  platforms: linux/amd64,linux/arm64
                   tags: ghcr.io/corebytee/wol-relay:latest-${{ matrix.os == 'ubuntu-24.04' && 'amd64' || 'arm64' }},ghcr.io/corebytee/wol-relay:${{ github.sha }}-${{ matrix.os == 'ubuntu-24.04' && 'amd64' || 'arm64' }}
