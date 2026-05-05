@@ -1,8 +1,5 @@
-FROM rust:latest as builder
+FROM alpine:latest
 WORKDIR /app
-COPY . .
-RUN cargo build --release
-
-FROM alpine:3.22
-COPY --from=builder /app/target/release/wol-relay /app/wol-relay
+COPY ./target/release/wol-relay /app/wol-relay
+RUN chmod +x /app/wol-relay
 ENTRYPOINT ["/app/wol-relay"]
