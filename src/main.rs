@@ -28,6 +28,8 @@ async fn main() {
     let port = std::env::var("WEBSERVER_PORT").expect("WEBSERVER_PORT env var is not set!");
     let host = format!("0.0.0.0:{}", port);
 
+    println!("Starting webserver on {host}");
+
     let router = Router::new()
         .route("/", get(index_route))
         .route("/api/check_password", get(password_check_route))
@@ -72,6 +74,7 @@ async fn send_packet_route(query: Query<SendPacketQuery>) -> Response<String> {
     let ok = password == query.password;
 
     if ok {
+        println!("Sending magic packet");
         let mac_address = get_mac_address();
         let ok = wol::send_magic_packet(mac_address, None, (Ipv4Addr::BROADCAST, 9).into()).is_ok();
         let status = if ok { 200 } else { 500 };
