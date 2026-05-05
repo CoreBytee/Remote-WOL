@@ -34,7 +34,7 @@ async fn main() {
         .route("/api/check_password", get(password_check_route))
         .route("/api/send_packet", get(send_packet_route));
 
-    let listener = tokio::net::TcpListener::bind(host).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(host.clone()).await.unwrap();
 
     println!("Webserver listening on {host}");
 
