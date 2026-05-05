@@ -4,3 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+wol = "0.5.1"
+dotenv = "0.15.0"
+serde = { version = "1.0.228", features = ["derive"] }
+axum = { version = "0.8.9", features = ["query"] }
+tokio = { version = "1.52.1", features = ["full"] }
