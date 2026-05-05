@@ -29,6 +29,5 @@ jobs:
                   password: ${{ secrets.GITHUB_TOKEN }}
             - uses: docker/build-push-action@v5
               with:
-                  context: ./docker-context
                   push: true
                   tags: ghcr.io/corebytee/wol-relay:latest,ghcr.io/corebytee/wol-relay:${{ github.sha }}
