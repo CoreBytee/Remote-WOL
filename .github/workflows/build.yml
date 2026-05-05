@@ -30,4 +30,5 @@ jobs:
             - uses: docker/build-push-action@v5
               with:
                   push: true
-                  tags: ghcr.io/corebytee/wol-relay:latest,ghcr.io/corebytee/wol-relay:${{ github.sha }}
+                  context: .
+                  tags: ghcr.io/corebytee/wol-relay:latest-${{ matrix.os == 'ubuntu-24.04' && 'amd64' || 'arm64' }},ghcr.io/corebytee/wol-relay:${{ github.sha }}-${{ matrix.os == 'ubuntu-24.04' && 'amd64' || 'arm64' }}
