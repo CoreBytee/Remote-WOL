@@ -19,7 +19,7 @@ fn get_mac_address() -> MacAddress {
 
 #[tokio::main]
 async fn main() {
-    dotenv().unwrap();
+    dotenv().ok();
 
     // ENV Checks
     get_password();
