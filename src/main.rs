@@ -83,13 +83,22 @@ async fn send_packet_route(data: Json<SendPacketJson>) -> Response<String> {
     if ok {
         println!("Sending magic packet");
         let mac_address = get_mac_address();
-        let ok = wol::send_magic_packet(mac_address, None, (Ipv4Addr::BROADCAST, 9).into()).is_ok();
-        let status = if ok { 200 } else { 500 };
 
-        return Response::builder()
-            .status(status)
-            .body("".to_string())
-            .unwrap();
+        match wol::send_magic_packet(mac_address, None, (Ipv4Addr::BROADCAST, 9).into()) {
+            Ok(()) => {
+                return Response::builder()
+                    .status(200)
+                    .body("".to_string())
+                    .unwrap();
+            }
+            Err(err) => {
+                eprintln!("Failed to send magic packet: {err}");
+                return Response::builder()
+                    .status(500)
+                    .body("Failed to send magic packet".to_string())
+                    .unwrap();
+            }
+        }
     } else {
         return Response::builder()
             .status(403)
