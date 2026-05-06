@@ -22,7 +22,7 @@ jobs:
                   path: ./target/release/wol-relay
 
     build-container:
-        needs: build
+        needs: build-binary
         runs-on: ubuntu-24.04
         permissions:
             contents: read
