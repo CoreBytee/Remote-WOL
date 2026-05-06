@@ -1,6 +1,10 @@
 use std::{net::Ipv4Addr, str::FromStr};
 
-use axum::{Router, extract::Query, http::Response, routing::get};
+use axum::{
+    Json, Router,
+    http::Response,
+    routing::{get, post},
+};
 use dotenv::dotenv;
 use serde::Deserialize;
 use wol::MacAddress;
@@ -31,8 +35,8 @@ async fn main() {
 
     let router = Router::new()
         .route("/", get(index_route))
-        .route("/api/check_password", get(password_check_route))
-        .route("/api/send_packet", get(send_packet_route));
+        .route("/api/check_password", post(password_check_route))
+        .route("/api/send_packet", post(send_packet_route));
 
     let listener = tokio::net::TcpListener::bind(host.clone()).await.unwrap();
 
@@ -52,13 +56,13 @@ async fn index_route() -> Response<String> {
 }
 
 #[derive(Deserialize)]
-struct PasswordCheckQuery {
+struct PasswordCheckJson {
     password: String,
 }
 
-async fn password_check_route(query: Query<PasswordCheckQuery>) -> Response<String> {
+async fn password_check_route(data: Json<PasswordCheckJson>) -> Response<String> {
     let password = get_password();
-    let ok = password == query.password;
+    let ok = password == data.password;
     let status = if ok { 200 } else { 403 };
     let body = ok.to_string();
 
@@ -66,13 +70,13 @@ async fn password_check_route(query: Query<PasswordCheckQuery>) -> Response<Stri
 }
 
 #[derive(Deserialize)]
-struct SendPacketQuery {
+struct SendPacketJson {
     password: String,
 }
 
-async fn send_packet_route(query: Query<SendPacketQuery>) -> Response<String> {
+async fn send_packet_route(data: Json<SendPacketJson>) -> Response<String> {
     let password = get_password();
-    let ok = password == query.password;
+    let ok = password == data.password;
 
     if ok {
         println!("Sending magic packet");

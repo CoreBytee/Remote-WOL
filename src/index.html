@@ -156,15 +156,21 @@
             async function checkPassword(password) {
                 if (password === undefined) return false;
                 if (password === "") return false;
-                const url = `/api/check_password?password=${password}`;
-                const response = await fetch(url);
+                const data = { password };
+                const body = JSON.stringify(data);
+                const headers = { "content-type": "application/json" };
+                const options = { body, headers, method: "POST" };
+                const response = await fetch("/api/check_password", options);
                 return response.ok;
             }
 
             async function sendPacket() {
                 const password = sessionStorage.getItem("wolr-password");
-                const url = `/api/send_packet?password=${password}`;
-                const response = await fetch(url);
+                const data = { password };
+                const body = JSON.stringify(data);
+                const headers = { "content-type": "application/json" };
+                const options = { body, headers, method: "POST" };
+                const response = await fetch("/api/send_packet", options);
                 return response.ok;
             }
 
