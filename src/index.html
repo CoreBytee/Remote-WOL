@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Wake On Lan Relay</title>
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' aria-hidden='true' role='img' style='color: rgb(255,255,255);' width='64' height='64' viewBox='0 0 14 14'><path fill='currentColor' fill-rule='evenodd' d='m6.547 10.263l-2.81-2.81c.309-.517.617-1.052.922-1.584c1.016-1.766 2.008-3.49 2.938-4.387c2.524-2.524 5.981-1.06 5.981-1.06s1.464 3.457-1.06 5.981c-.89.922-2.587 1.9-4.34 2.908c-.546.315-1.097.632-1.631.952m2.14-6.532a1.582 1.582 0 1 1 3.164 0a1.582 1.582 0 0 1-3.163 0m-4.09-.232C3.18 3.122 1.849 3.82.668 4.903a.48.48 0 0 0 .089.765l1.905 1.148l.002-.004c.275-.46.582-.993.894-1.533c.355-.617.716-1.243 1.04-1.78m2.587 7.84l1.148 1.905a.48.48 0 0 0 .765.088c1.083-1.18 1.782-2.512 1.404-3.93c-.522.314-1.07.63-1.613.943l-.083.048c-.548.316-1.091.628-1.616.943zM2.622 9.343a2 2 0 0 1 1.402 3.46c-.222.212-.569.379-.89.506a11 11 0 0 1-1.1.358c-.367.1-.717.18-.982.233a6 6 0 0 1-.336.059q-.066.009-.133.013a.5.5 0 0 1-.198-.022a.5.5 0 0 1-.241-.156a.5.5 0 0 1-.11-.22a.6.6 0 0 1-.012-.176c.003-.04.009-.086.015-.128c.013-.088.033-.203.06-.334c.053-.264.135-.612.235-.977c.1-.364.222-.754.359-1.095c.128-.321.294-.667.506-.888a2 2 0 0 1 1.425-.633' clip-rule='evenodd'></path></svg>"
+            type="image/svg+xml"
+        />
+
+        <style>
+            * {
+                color: hsl(0, 0%, 90%);
+                font-family:
+                    Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+                text-align: center;
+
+                margin: 0;
+            }
+
+            html,
+            body {
+                background-color: black;
+                height: 100%;
+            }
+
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            input,
+            button {
+                background-color: hsl(0, 0%, 15%);
+                transition: background-color 0.2s ease-in-out;
+                border: none;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            input:hover,
+            button:hover {
+                background-color: hsl(0, 0%, 20%);
+            }
+
+            button {
+                cursor: pointer;
+                font-weight: 900;
+            }
+
+            .footer {
+                margin-top: auto;
+            }
+
+            .footer,
+            .footer > * {
+                font-size: 0.9rem;
+                color: hsl(0, 0%, 50%);
+            }
+
+            .container {
+                background-color: hsl(0, 0%, 10%);
+                border-radius: 10px;
+
+                padding: 20px;
+                padding-left: 30px;
+                padding-right: 30px;
+
+                width: 300px;
+                height: 250px;
+
+                display: flex;
+                flex-direction: column;
+
+                .login-prompt,
+                .send-page {
+                    display: none;
+                }
+            }
+
+            .container.login .login-prompt {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                flex: 1;
+
+                .password-container {
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    gap: 5px;
+                    flex: 1;
+
+                    .error {
+                        color: darkred;
+                    }
+                }
+            }
+
+            .container.main .send-page {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                flex: 1;
+
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    flex-direction: column;
+                    gap: 5px;
+                    flex: 1;
+
+                    .send-button {
+                        font-size: 1.5rem;
+                        font-weight: 800;
+                        border-radius: 10px;
+                        padding: 15px;
+                    }
+
+                    .status-text {
+                        opacity: 0;
+                        transform: translateY(2px);
+                        color: white;
+
+                        transition:
+                            opacity 0.1s ease-in-out,
+                            transform 0.1s ease-in-out,
+                            color 0.1s ease-in-out;
+                    }
+
+                    .status-text.success,
+                    .status-text.error,
+                    .status-text.loading {
+                        opacity: 1;
+                        transform: translateY(0px);
+                    }
+
+                    .status-text.success {
+                        color: green;
+                    }
+
+                    .status-text.error {
+                        color: darkred;
+                    }
+                }
+            }
+        </style>
+
+        <script>
+            async function checkPassword(password) {
+                if (password === undefined) return false;
+                if (password === "") return false;
+                const data = { password };
+                const body = JSON.stringify(data);
+                const headers = { "content-type": "application/json" };
+                const options = { body, headers, method: "POST" };
+                const response = await fetch("/api/check_password", options);
+                return response.ok;
+            }
+
+            async function sendPacket() {
+                const password = sessionStorage.getItem("wolr-password");
+                const data = { password };
+                const body = JSON.stringify(data);
+                const headers = { "content-type": "application/json" };
+                const options = { body, headers, method: "POST" };
+                const response = await fetch("/api/send_packet", options);
+                return response.ok;
+            }
+
+            function setLoginState(loggedIn) {
+                const container = document.getElementById("container");
+                container.className = loggedIn
+                    ? "container main"
+                    : "container login";
+            }
+
+            // Login state
+            document.addEventListener("DOMContentLoaded", async () => {
+                const password = sessionStorage.getItem("wolr-password");
+                const correct = await checkPassword(password);
+                return setLoginState(correct);
+            });
+
+            // Footer year
+            document.addEventListener("DOMContentLoaded", () => {
+                const footer = document.getElementById("footer-year");
+                footer.innerText = new Date().getFullYear();
+            });
+
+            // Login
+            document.addEventListener("DOMContentLoaded", () => {
+                const passwordInput = document.getElementById("password-input");
+                const loginButton = document.getElementById("login-button");
+                const error = document.getElementById("error");
+
+                loginButton.addEventListener("click", async () => {
+                    const password = passwordInput.value;
+                    const ok = await checkPassword(password);
+
+                    if (ok) {
+                        sessionStorage.setItem("wolr-password", password);
+                        setLoginState(true);
+                    } else {
+                        error.innerText = "Password check failed";
+                    }
+                });
+            });
+
+            // Send packet
+            document.addEventListener("DOMContentLoaded", () => {
+                const sendPacketButton = document.getElementById("send-button");
+                const statusText = document.getElementById("status-text");
+                let statusTimeout = null;
+
+                sendPacketButton.addEventListener("click", async () => {
+                    statusText.innerText = "Loading";
+                    statusText.className = "status-text loading";
+
+                    if (statusTimeout) clearTimeout(statusTimeout);
+
+                    const success = await sendPacket();
+                    if (success) {
+                        statusText.innerText = "Packet sent successfully!";
+                        statusText.className = "status-text success";
+                    } else {
+                        statusText.innerText =
+                            "Something went wrong while sending the packet!";
+                        statusText.className = "status-text error";
+                    }
+
+                    statusTimeout = setTimeout(() => {
+                        statusText.className = "status-text";
+                        statusTimeout = null;
+                    }, 3000);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container" id="container">
+            <div class="login-prompt">
+                <h3>Log in to use WOLR</h3>
+                <div class="password-container">
+                    <input
+                        type="password"
+                        id="password-input"
+                        placeholder="Enter password"
+                    />
+                    <button type="button" id="login-button">Login</button>
+                    <p class="error" id="error"></p>
+                </div>
+            </div>
+            <div class="send-page">
+                <h3>Press the button below to send the WOL packet</h3>
+                <div class="button-container">
+                    <button type="button" id="send-button" class="send-button">
+                        Send packet
+                    </button>
+                    <p class="status-text" id="status-text">Status</p>
+                </div>
+            </div>
+            <p class="footer" id="footer">
+                <a href="https://github.com/CoreBytee/Remote-WOL"
+                    >WOLR is a project</a
+                >
+                by <a href="https://github.com/CoreBytee">CoreByte</a> ©
+                <span id="footer-year"></span> MIT
+            </p>
+        </div>
+    </body>
+</html>
